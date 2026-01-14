@@ -1,0 +1,33 @@
+name: GitHub → GitLab Mirroring
+on:
+  push:
+    branches: ["**"]
+    tags: ["*"]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Push to GitLab
+        env:
+          GL_PAT: ${{ secrets.GL_PAT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          : "${GL_PAT:?GL_PAT is required}"
+
+          GL_NAMESPACE="JangKnight"
+          REPO_NAME="${GITHUB_REPOSITORY##*/}"
+          git remote remove gitlab 2>/dev/null || true
+          git remote add gitlab "https://oauth2:${GL_PAT}@gitlab.com/${GL_NAMESPACE}/${REPO_NAME}.git"
+
+          echo "==> Pushing branch ${GITHUB_REF_NAME}"
+          git push gitlab "HEAD:${GITHUB_REF_NAME}" --force
+
+          echo "==> Pushing tags"
+          git push gitlab --tags --force

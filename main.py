@@ -1,0 +1,61 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Dict
+from datetime import datetime
+
+class ServiceRegistration(BaseModel):
+    name: str
+    url: str
+    version: str
+    health_endpoint: str
+
+app = FastAPI()
+services: Dict[str, dict] = {}
+
+@app.get("/")
+async def read_root():
+    return {"Greeting": "Hello, World!"}
+
+@app.get("/services")
+async def list_services():
+    return {
+        "count": len(services),
+        "services": list(services.values())
+    }
+
+@app.get("/services/{name}")
+async def get_service(name: str):
+    if name not in services:
+        raise HTTPException(status_code=404, detail=f"Service '{name}' not found")
+    return services[name]
+
+@app.post("/register")
+async def register(service: ServiceRegistration):
+    # if service.name in services:
+    #     raise HTTPException(status_code=400, detail="Service already registered")
+
+    if not service.url:
+        raise HTTPException(status_code=400, detail="URL is required")
+    
+    if not service.version:
+        raise HTTPException(status_code=400, detail="Version is required")
+
+    if not service.health_endpoint:
+        raise HTTPException(status_code=400, detail="Health endpoint is required")
+
+    services[service.name] = {
+        "url": service.url,
+        "version": service.version,
+        "health_endpoint": service.health_endpoint,
+        "registered_at": datetime.utcnow().isoformat()
+    }
+    return {"message": f"Service {service.name} registered successfully."}
+
+@app.delete("/services/{name}")
+async def deregister(name: str):
+    if name not in services:
+        raise HTTPException(status_code=404, detail=f"Service '{name}' not found")
+    del services[name]
+    return {"message": f"Service {name} deregistered successfully."}
+
+
