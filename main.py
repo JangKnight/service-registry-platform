@@ -11,10 +11,29 @@ class ServiceRegistration(BaseModel):
 
 app = FastAPI()
 services: Dict[str, dict] = {}
+platform_start_time = datetime.now()
 
 @app.get("/")
 async def read_root():
     return {"Greeting": "Hello, World!"}
+
+@app.get("/discover/{name}")
+async def discover_service(name: str):
+    if name not in services:
+        raise HTTPException(status_code=404, detail=f"Service '{name}' not found")
+    return services[name]
+
+
+
+@app.get("/health")
+async def health_check():
+    uptime = (datetime.now() - platform_start_time).total_seconds()
+    return{
+        "status": "OK",
+        "registered_services": len(services),
+        "uptime": uptime,
+        "timestamp": datetime.utcnow().isoformat()
+    }
 
 @app.get("/services")
 async def list_services():
