@@ -44,6 +44,7 @@ async def register(service: ServiceRegistration):
         raise HTTPException(status_code=400, detail="Health endpoint is required")
 
     services[service.name] = {
+        "name": service.name,
         "url": service.url,
         "version": service.version,
         "health_endpoint": service.health_endpoint,
