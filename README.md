@@ -94,10 +94,6 @@ curl http://localhost:8000/health
 ```
 
 
-## 📄 License
-
-MIT License - feel free to use this code for learning purposes.
-
 
 ## 🔗 Links
 
