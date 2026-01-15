@@ -29,9 +29,9 @@ async def discover_service(name: str):
 async def health_check():
     uptime = (datetime.now() - platform_start_time).total_seconds()
     return{
-        "status": "OK",
+        "status": "OK",  # OK until data persistence is implemented
         "registered_services": len(services),
-        "uptime": uptime,
+        "uptime": f"{uptime} seconds",
         "timestamp": datetime.utcnow().isoformat()
     }
 
