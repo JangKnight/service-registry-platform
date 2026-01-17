@@ -5,7 +5,7 @@
 
 
 
-## Provisions
+## What it does
 - **Service Registration**: Services register with name, URL, version, and health endpoint
 - **Service Discovery**: Query for specific services by name
 - **Health Checks**: Platform and service health monitoring
@@ -39,6 +39,14 @@
 | DELETE | `/services/{name}` | Deregister a service |
 | GET | `/health` | Platform health check |
 | GET | `/discover/{name}` | Service discovery lookup |
+
+## Live Demo
+
+**Production URL:** https://service-registry-platform.onrender.com
+
+**Try it:**
+- [API Documentation](https://service-registry-platform.onrender.com/docs)
+- [Health Check](https://service-registry-platform.onrender.com/health)
 
 ## Run locally
 
