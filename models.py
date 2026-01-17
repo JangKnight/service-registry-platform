@@ -17,7 +17,6 @@ class Service(Base):
             "url": self.url,
             "version": self.version,
             "health_endpoint": self.health_endpoint,
-            "registered_at": self.registered_at.isoformat() \
-            if self.registered_at else None
+            "registered_at": self.registered_at.isoformat() if self.registered_at else None
 
         }
