@@ -15,7 +15,14 @@ platform_start_time = datetime.now()
 
 @app.get("/")
 async def read_root():
-    return {"Greeting": "Hello, World!"}
+    return {
+        "Discover": "Use /discover/{name} to find a service by name.",
+        "Health": "Use /health to check platform status.",
+        "Register": "Use /register (POST) to register a new service.",
+        "Deregister": "Use /services/{name} (DELETE) to deregister a service",
+        "List Services": "Use /services to list all registered services."
+    }
+
 
 @app.get("/discover/{name}")
 async def discover_service(name: str):
