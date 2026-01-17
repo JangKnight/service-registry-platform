@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse, PlainTextResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import Dict
 from datetime import datetime
@@ -15,18 +16,7 @@ platform_start_time = datetime.now()
 
 @app.get("/")
 async def read_root():
-    return {
-        {
-        "Documents": "/docs",
-        "Endpoints": {
-            "Discover": "Use /discover/{name} to find a service by name.",
-            "Health": "Use /health to check platform status.",
-            "Register": "Use /register (POST) to register a new service.",
-            "Deregister": "Use /services/{name} (DELETE) to deregister a service",
-            "List Services": "Use /services to list all registered services."
-        }
-    }
-}
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/discover/{name}")
