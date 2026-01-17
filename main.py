@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Dict
 from datetime import datetime
 
+
 class ServiceRegistration(BaseModel):
     name: str
     url: str
