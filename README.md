@@ -1,6 +1,9 @@
-# Service Registry Platform
+# [Service Registry Platform](https://service-registry-platform.onrender.com)
+
 > A microservices service registry and discovery system built with FastAPI. 
 > Services can register themselves, be discovered by other services, and provide health status.
+
+
 
 ## Provisions
 - **Service Registration**: Services register with name, URL, version, and health endpoint
@@ -96,6 +99,6 @@ curl http://localhost:8000/health
 
 
 ## 🔗 Links
-
+- [Service Registry Platform](https://service-registry-platform.onrender.com)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [Service Registry Pattern](https://microservices.io/patterns/service-registry.html)
