@@ -14,7 +14,7 @@ class ServiceRegistration(BaseModel):
     version: str
     health_endpoint: str
 
-Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 platform_start_time = datetime.now()
 # services: Dict[str, dict] = {}
@@ -221,6 +221,13 @@ async def startup_event():
                 ver="1.0.0 ",
                 db="postgresql"
         )
+
+    try:
+        from database import init_db
+        init_db()
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error("Database initialization failed", error=str(e))
 
 @app.on_event("shutdown")
 async def shutdown_event():
