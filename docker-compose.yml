@@ -1,16 +1,18 @@
 services:
   db:
     image: postgres:18
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: platform
-      POSTGRES_PASSWORD: devpassword
-      POSTGRES_DB: registry
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U platform"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -19,8 +21,8 @@ services:
     build: .
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://platform:devpassword@db:5432/registry
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
