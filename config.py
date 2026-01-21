@@ -8,10 +8,10 @@ class Settings(BaseSettings):
     db_host: str = "db"
     db_port: int = 5432
 
-      @computed_field
-      @property
-      def database_url(self) -> str:
-          return f"postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+    @computed_field
+    @property
+    def database_url(self) -> str:
+        return f"postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
 
 
