@@ -5,6 +5,7 @@
 
 
 
+
 ## What it does
 - **Service Registration**: Services register with name, URL, version, and health endpoint
 - **Service Discovery**: Query for specific services by name
@@ -48,7 +49,21 @@
 - [API Documentation](https://service-registry-platform.onrender.com/docs)
 - [Health Check](https://service-registry-platform.onrender.com/health)
 
-## Run locally
+## Docker Hub
+
+Docker image: `anthonysjhenry633/service-registry`
+
+Pull and run:
+```bash
+docker pull anthonysjhenry633/service-registry:latest
+docker run -p 8000:8000 anthonysjhenry633/service-registry:latest
+```
+
+Available tags:
+- `latest` - Current development version
+- `v1.0` - Stable release v1.0
+
+## Run manually local
 
 ### Prereqs
 - Python 3.10 or higher

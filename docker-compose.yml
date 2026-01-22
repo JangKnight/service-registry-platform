@@ -25,6 +25,7 @@ services:
 
   api:
     build: .
+    image: anthonysjhenry633/service-registry:latest
     networks:
       - platform-network
     env_file:
