@@ -1,0 +1,58 @@
+[
+    {
+        "Name": "service-registry-platform_default",
+        "Id": "41a0b9b98e1501b02357b26062931f5bf2f9d4a4f9b48c1b16a655e3363a1db7",
+        "Created": "2026-01-21T01:02:11.384099177Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "IPRange": "",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {
+            "com.docker.compose.config-hash": "ffc1e2d44c9892fb8aa46bf6214ac8cdec4ceb594effbb8bcf618b1d352dfb27",
+            "com.docker.compose.network": "default",
+            "com.docker.compose.project": "service-registry-platform",
+            "com.docker.compose.version": "2.40.3"
+        },
+        "Containers": {
+            "678f7d162cfdfc2da836f6b1874d011f64162863167d3a4d1dc04fa7c38c00b6": {
+                "Name": "service-registry-platform-db-1",
+                "EndpointID": "3c698095ec799ebc39091308a545ff95319cc6105adc9585730220924ba4bc89",
+                "MacAddress": "06:ec:cb:6b:d7:42",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.18.0.0/16": {
+                        "IPsInUse": 4,
+                        "DynamicIPsAvailable": 65532
+                    }
+                }
+            }
+        }
+    }
+]

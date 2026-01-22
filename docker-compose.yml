@@ -1,6 +1,12 @@
+networks:
+  platform-network:
+    driver: bridge
+
 services:
   db:
     image: postgres:18
+    networks:
+      - platform-network
     env_file:
       - .env
     environment:
@@ -19,8 +25,8 @@ services:
 
   api:
     build: .
-    ports:
-      - "8000:8000"
+    networks:
+      - platform-network
     env_file:
       - .env
     depends_on:
@@ -28,6 +34,17 @@ services:
         condition: service_healthy
     volumes:
       - .:/app
+
+  nginx:
+    image: nginx:alpine
+    networks:
+      - platform-network
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
