@@ -20,3 +20,8 @@ variable "environment" {
   type        = string
   default     = "dev"
 }
+
+variable "my_ip" {
+  description = "IP address for SSH access (CIDR notation)"
+  type        = string
+}
