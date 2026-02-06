@@ -43,3 +43,4 @@ class StructuredLogger:
         self._log("debug", message, **kwargs)
 
 logger = StructuredLogger(__name__)
+names: list[str] = []

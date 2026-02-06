@@ -37,3 +37,19 @@ output "ssh_connection" {
   description = "SSH connection command"
   value       = "ssh -i ~/.ssh/id_rsa ec2-user@${aws_instance.app_server.public_ip}"
 }
+
+output "alb_dns_name" {
+  description = "DNS name of the load balancer"
+  value       = aws_lb.main.dns_name
+}
+
+output "alb_url" {
+  description = "URL to access application"
+  value       = "http://${aws_lb.main.dns_name}"
+}
+
+output "target_group_arn" {
+  description = "ARN of target group"
+  value       = aws_lb_target_group.app.arn
+}
+

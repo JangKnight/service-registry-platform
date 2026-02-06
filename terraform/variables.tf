@@ -25,3 +25,9 @@ variable "my_ip" {
   description = "IP address for SSH access (CIDR notation)"
   type        = string
 }
+
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "platform-bootcamp"
+}
