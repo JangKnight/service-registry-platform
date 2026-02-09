@@ -53,3 +53,24 @@ output "target_group_arn" {
   value       = aws_lb_target_group.app.arn
 }
 
+output "rds_endpoint" {
+  description = "RDS instance endpoint"
+  value       = aws_db_instance.main.endpoint
+  sensitive   = true
+}
+
+output "rds_address" {
+  description = "RDS instance address (hostname only)"
+  value       = aws_db_instance.main.address
+}
+
+output "rds_port" {
+  description = "RDS instance port"
+  value       = aws_db_instance.main.port
+}
+
+output "database_url" {
+  description = "PostgreSQL connection string"
+  value       = "postgresql://${aws_db_instance.main.username}:${random_password.db_password.result}@${aws_db_instance.main.endpoint}/${aws_db_instance.main.db_name}"
+  sensitive   = true
+}

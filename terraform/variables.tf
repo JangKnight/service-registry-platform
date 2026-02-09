@@ -29,5 +29,18 @@ variable "my_ip" {
 variable "project_name" {
   description = "Project name"
   type        = string
-  default     = "platform-bootcamp"
+  default     = "service-registry"
 }
+
+variable "docker_image" {
+  description = "Docker image name"
+  type        = string
+  default     = "anthonysjhenry633/service-registry:latest"
+}
+
+variable "app_secret_key" {
+  description = "Application secret key"
+  type        = string
+  sensitive   = true
+}
+

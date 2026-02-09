@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 }
 
@@ -22,6 +26,95 @@ resource "aws_vpc" "main" {
     Project     = "platform-bootcamp"
     ManagedBy   = "terraform"
   }
+}
+
+resource "aws_db_subnet_group" "main" {
+  name = "${var.project_name}-db-subnet-group"
+  subnet_ids = [
+    aws_subnet.private_1.id,
+    aws_subnet.private_2.id
+  ]
+
+  tags = {
+    Name = "${var.project_name}-db-subnet-group"
+  }
+}
+
+resource "aws_db_instance" "main" {
+  identifier = "${var.project_name}-db"
+
+  # Engine configuration
+  engine         = "postgres"
+  engine_version = "16.11"
+  instance_class = "db.t3.micro"
+
+  # Storage configuration
+  allocated_storage     = 20 # GB
+  max_allocated_storage = 100
+  storage_type          = "gp3"
+  storage_encrypted     = true
+
+  # Database 
+  db_name  = "registry"
+  username = "registry_admin"
+  password = random_password.db_password.result
+  port     = 5432
+
+  # Network 
+  db_subnet_group_name   = aws_db_subnet_group.main.name
+  vpc_security_group_ids = [aws_security_group.database.id]
+  publicly_accessible    = false # CRITICAL
+
+  # High availability
+  multi_az = false # true for prod; false = avoiding cost
+
+  # Backup configuration
+  backup_retention_period = 0                     # Days
+  backup_window           = "03:00-04:00"         # UTC
+  maintenance_window      = "mon:04:00-mon:05:00" # UTC
+
+  # Performance Insights
+  enabled_cloudwatch_logs_exports       = ["postgresql", "upgrade"]
+  performance_insights_enabled          = true
+  performance_insights_retention_period = 7
+
+  # Deletion protection
+  deletion_protection = false # true for prod
+  skip_final_snapshot = true  # false for prod
+
+  # Parameter group (optional, use default for now)
+  # parameter_group_name = aws_db_parameter_group.main.name
+
+  tags = {
+    Name        = "${var.project_name}-database"
+    Environment = "dev"
+  }
+}
+
+resource "aws_security_group" "database" {
+  name        = "${var.project_name}-database-sg"
+  description = "Security group for RDS PostgreSQL"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description     = "PostgreSQL from app servers"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app_server.id]
+  }
+
+
+  tags = {
+    Name = "${var.project_name}-database-sg"
+  }
+}
+
+resource "random_password" "db_password" {
+  length  = 32
+  special = true
+  # Exclude characters that might cause issues in connection strings
+  override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 resource "aws_subnet" "public_1" {
@@ -47,6 +140,7 @@ resource "aws_subnet" "public_2" {
     Type = "public"
   }
 }
+
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -158,6 +252,21 @@ resource "aws_instance" "app_server" {
     # Add ec2-user to docker group
     usermod -a -G docker ec2-user
 
+    # Wait for Docker to be ready
+    sleep 5
+
+    # Pull and run application
+    docker pull ${var.docker_image}
+
+    # Run with RDS connection
+    docker run -d \
+      --name service-registry \
+      --restart unless-stopped \
+      -p 8000:8000 \
+      -e DATABASE_URL="postgresql://${aws_db_instance.main.username}:${random_password.db_password.result}@${aws_db_instance.main.endpoint}/${aws_db_instance.main.db_name}" \
+      -e SECRET_KEY="${var.app_secret_key}" \
+      ${var.docker_image}
+
     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
       -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
@@ -247,31 +356,7 @@ resource "aws_security_group" "alb" {
 }
 
 
-resource "aws_security_group" "database" {
-  name        = "database-sg"
-  description = "Security group for RDS database"
-  vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description     = "PostgreSQL from app servers"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.app_server.id]
-  }
-
-  egress {
-    description = "Allow all outbound"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "database-security-group"
-  }
-}
 
 resource "aws_lb" "main" {
   name               = "${var.project_name}-alb"
