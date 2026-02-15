@@ -45,7 +45,11 @@
 
 ## Live Demo
 
-**Production URL:** https://service-registry-platform.onrender.com
+**Production URLs:** 
+
+https://service-registry-platform.onrender.com
+
+http://service-registry-alb-565357746.us-east-2.elb.amazonaws.com/docs
 
 **Try it:**
 - [API Documentation](https://service-registry-platform.onrender.com/docs)
@@ -125,5 +129,6 @@ curl http://localhost:8000/health
 
 ## 🔗 Links
 - [Service Registry Platform](https://service-registry-platform.onrender.com)
+- [Service Registry Platform on AWS](http://service-registry-alb-565357746.us-east-2.elb.amazonaws.com/docs)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [Service Registry Pattern](https://microservices.io/patterns/service-registry.html)
