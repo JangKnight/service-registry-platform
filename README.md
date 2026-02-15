@@ -1,5 +1,7 @@
 # [Service Registry Platform](https://service-registry-platform.onrender.com)
 
+##### [AWS Hosted Version (port 80)](http://service-registry-alb-565357746.us-east-2.elb.amazonaws.com/docs)
+
 > A microservices service registry and discovery system built with FastAPI. 
 > Services can register themselves, be discovered by other services, and provide health status.
 
